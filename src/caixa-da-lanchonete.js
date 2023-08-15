@@ -1,6 +1,7 @@
 class CaixaDaLanchonete {
 
-    
+    mensagem;
+    valor;
     itensDoCardapio = {
         "cafe": 3.00,
         "chantily": 1.50,
@@ -22,18 +23,32 @@ class CaixaDaLanchonete {
 
     calcularValorDaCompra(metodoDePagamento, itens) {
         if(itens){
-            let retornoVerifica = this.verificarItens(itens);
-            console.log(retornoVerifica);
+            if(this.verificarItens(itens)){
+
+                let retornoVerificaMetodo = this.verificarMetodoDePagamento(metodoDePagamento);
+                if(retornoVerificaMetodo){
+
+                    console.log("passou no metodo");
+
+                    // fazer cálculo do valor a pagar
+
+                    // tranformar para string e colocar R$ na frente
+
+                } else {
+                    this.mensagem = "Forma de pagamento inválida!";
+                }
+
+            }
         } else {
-            console.log("Não há itens no carrinho de compra!");
+            this.mensagem = "Não há itens no carrinho de compra!";
         }
         
-
-        // this.verificarItens(itens);
-
-        // this.metodoDePagamento(metodoDePagamento);
-
-        return "";
+        if(this.mensagem){
+            // return this.mensagem;
+            console.log(this.mensagem);
+        } else {
+            return this.valor;
+        }
     }
 
     separarItemDaQuantidade(itens){
@@ -52,69 +67,84 @@ class CaixaDaLanchonete {
     }
 
     verificarItens(itens){
-        let mensagem;
         let temItem = true;
         let temCafe = false;
         let temChantily = false;
         let temSanduiche = false;
         let temQueijo = false;
+        let temQuantidade = true;
+
         if(itens.length > 0){
 
         itens = this.separarItemDaQuantidade(itens);
 
-        // verificar se existem os itens -> "Item inválido!" FEITO
-            itens.forEach(e => {
-                if (!this.itensDoCardapio.hasOwnProperty(e[0])) {
-                    temItem = false;
-                }
-            });
+        //  Verificar se existe item
+        itens.forEach(e => {
+            if (!this.itensDoCardapio.hasOwnProperty(e[0])) {
+                temItem = false;
+            }
+        });
 
         if(temItem === false) {
-            return mensagem = "Item inválido!";
+            return this.mensagem = "Item inválido!";
         }
 
-        // se item extra -> verificar se item principal foi solicitado antes do extra -> "Item extra não pode ser pedido sem o principal"
-
+        // Verificar tem item extra + item principal
         for(let i = 0; i < itens.length; i++){
-            if(itens[i][0] = "cafe"){
+            if(itens[i][0] === "cafe"){
                 temCafe = true;
             }
-            if(itens[i][0] = "sanduiche"){
+            if(itens[i][0] === "sanduiche"){
                 temSanduiche = true;
             }
-            if(itens[i][0] = "chantily"){
+            if(itens[i][0] === "chantily"){
                 temChantily = true;
             }
-            if(itens[i][0] = "queijo"){
+            if(itens[i][0] === "queijo"){
                 temQueijo = true;
             }        
         }
 
         if(temChantily && !temCafe || temQueijo && !temSanduiche){
-            return mensagem = "Item extra não pode ser pedido sem o principal";
-        } else {
-            return "tudo certo";
+            return this.mensagem = "Item extra não pode ser pedido sem o principal";
         }
 
         // verificar se há a quantidade de itens > 0 -> "Quantidade inválida!"
+        itens.forEach(e => {
+            if(!e[1] || e[1] < 1){
+                temQuantidade = false;
+            }            
+        });
+
+        if(!temQuantidade){
+            return this.mensagem = "Quantidade inválida!";
+        }
+
+        return true;
 
         } else {
-            return mensagem = "Não há itens no carrinho de compra!";
+            return this.mensagem = "Não há itens no carrinho de compra!";
         }
 
     }
 
-    // verificarMetodoDePagamento(metodoDePagamento){
-    //     if(metodoDePagamento === "debito"){
-    //         retor
-    //     }
-    // }
+    verificarMetodoDePagamento(metodoDePagamento){
+        if(metodoDePagamento === "debito"){
+            return 1;
+        }
+        if(metodoDePagamento === "dinheiro"){
+            return 0.95;
+        }
+        if(metodoDePagamento === "credito"){
+            return 1.03;
+        }
+
+        return false;
+    }
 
 }
 
 export { CaixaDaLanchonete };
 
 let cardapio = new CaixaDaLanchonete();
-cardapio.calcularValorDaCompra("cartao", ["cafe,1.8", "chantily,3.2"]);
-
-// cardapio.calcularValorDaCompra("cartao");
+cardapio.calcularValorDaCompra("credito", ["sanduiche,3.2", "cafe,1", "queijo,6", "chantily, 3"]);
