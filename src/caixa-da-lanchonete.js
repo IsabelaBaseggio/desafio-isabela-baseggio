@@ -75,26 +75,26 @@ class CaixaDaLanchonete {
 
         // se item extra -> verificar se item principal foi solicitado antes do extra -> "Item extra não pode ser pedido sem o principal"
 
-        // for(let i = 0; i < itens.length; i++){
-        //     if(itens[i][0] = "cafe"){
-        //         temCafe = true;
-        //     }
-        //     if(itens[i][0] = "sanduiche"){
-        //         temSanduiche = true;
-        //     }
-        //     if(itens[i][0] = "chantily"){
-        //         temChantily = true;
-        //     }
-        //     if(itens[i][0] = "queijo"){
-        //         temQueijo = true;
-        //     }        
-        // }
+        for(let i = 0; i < itens.length; i++){
+            if(itens[i][0] = "cafe"){
+                temCafe = true;
+            }
+            if(itens[i][0] = "sanduiche"){
+                temSanduiche = true;
+            }
+            if(itens[i][0] = "chantily"){
+                temChantily = true;
+            }
+            if(itens[i][0] = "queijo"){
+                temQueijo = true;
+            }        
+        }
 
-        // if(temChantily && !temCafe || temQueijo && !temSanduiche){
-        //     return mensagem = "Item extra não pode ser pedido sem o principal";
-        // } else {
-        //     return "tudo certo"
-        // }
+        if(temChantily && !temCafe || temQueijo && !temSanduiche){
+            return mensagem = "Item extra não pode ser pedido sem o principal";
+        } else {
+            return "tudo certo";
+        }
 
         // verificar se há a quantidade de itens > 0 -> "Quantidade inválida!"
 
