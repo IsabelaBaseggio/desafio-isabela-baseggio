@@ -63,14 +63,11 @@ class CaixaDaLanchonete {
         itens = this.separarItemDaQuantidade(itens);
 
         // verificar se existem os itens -> "Item inválido!" FEITO
-        while(temItem){
             itens.forEach(e => {
                 if (!this.itensDoCardapio.hasOwnProperty(e[0])) {
                     temItem = false;
                 }
             });
-            // se todos os item existirem temItem não fica false e não sai do while -> resolver isso
-        }
 
         if(temItem === false) {
             return mensagem = "Item inválido!";
