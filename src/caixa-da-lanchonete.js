@@ -1,7 +1,9 @@
 class CaixaDaLanchonete {
 
     mensagem;
-    valor;
+    itens;
+    taxa;
+    valor = 0;
     itensDoCardapio = {
         "cafe": 3.00,
         "chantily": 1.50,
@@ -13,41 +15,33 @@ class CaixaDaLanchonete {
         "combo2": 7.50
     };
 
-    // constructor(){
-    //     this.mostrarCardapio();
-    // }
-
-    // mostrarCardapio() {
-    //     console.log("| codigo    | descrição                   | valor   |\n|-----------|-----------------------------|---------|\n| cafe      | Café                        | R$ 3,00 |\n| chantily  | Chantily (extra do Café)    | R$ 1,50 |\n| suco      | Suco Natural                | R$ 6,20 |\n| sanduiche | Sanduíche                   | R$ 6,50 |\n| queijo    | Queijo (extra do Sanduíche) | R$ 2,00 |\n| salgado   | Salgado                     | R$ 7,25 |\n| combo1    | 1 Suco e 1 Sanduíche        | R$ 9,50 |\n| combo2    | 1 Café e 1 Sanduíche        | R$ 7,50 |");
-    // }
-
     calcularValorDaCompra(metodoDePagamento, itens) {
         if(itens){
+            
             if(this.verificarItens(itens)){
 
-                let retornoVerificaMetodo = this.verificarMetodoDePagamento(metodoDePagamento);
-                if(retornoVerificaMetodo){
+                if(this.verificarMetodoDePagamento(metodoDePagamento)){
+                    
+                    this.itens.forEach(e => {
+                        this.valor += this.itensDoCardapio[e[0]] * e[1];
+                    })
 
-                    console.log("passou no metodo");
-
-                    // fazer cálculo do valor a pagar
-
-                    // tranformar para string e colocar R$ na frente
+                    this.valor = this.valor * this.taxa;
 
                 } else {
                     this.mensagem = "Forma de pagamento inválida!";
                 }
 
             }
+
         } else {
             this.mensagem = "Não há itens no carrinho de compra!";
         }
         
         if(this.mensagem){
-            // return this.mensagem;
-            console.log(this.mensagem);
+            return this.mensagem;
         } else {
-            return this.valor;
+            return `R$ ${this.valor.toFixed(2).toString().replace(".", ",")}`;
         }
     }
 
@@ -61,9 +55,10 @@ class CaixaDaLanchonete {
         itensSeparadosDaQuantidade.forEach(e => {
             e[1] = Math.floor(parseInt(e[1]));            
         });
-        // console.log(itensSeparadosDaQuantidade);
 
-        return itensSeparadosDaQuantidade;
+        this.itens = itensSeparadosDaQuantidade;
+
+        return this.itens;
     }
 
     verificarItens(itens){
@@ -86,30 +81,32 @@ class CaixaDaLanchonete {
         });
 
         if(temItem === false) {
-            return this.mensagem = "Item inválido!";
+            this.mensagem = "Item inválido!";
+            return false;
         }
 
-        // Verificar tem item extra + item principal
-        for(let i = 0; i < itens.length; i++){
-            if(itens[i][0] === "cafe"){
+        // Verificar se tem item extra + item principal
+        itens.forEach(e => {
+            if(e[0] === "cafe"){
                 temCafe = true;
             }
-            if(itens[i][0] === "sanduiche"){
+            if(e[0] === "sanduiche"){
                 temSanduiche = true;
             }
-            if(itens[i][0] === "chantily"){
+            if(e[0] === "chantily"){
                 temChantily = true;
             }
-            if(itens[i][0] === "queijo"){
+            if(e[0] === "queijo"){
                 temQueijo = true;
-            }        
-        }
+            }   
+        });
 
         if(temChantily && !temCafe || temQueijo && !temSanduiche){
-            return this.mensagem = "Item extra não pode ser pedido sem o principal";
+            this.mensagem = "Item extra não pode ser pedido sem o principal";
+            return false;
         }
 
-        // verificar se há a quantidade de itens > 0 -> "Quantidade inválida!"
+        // Virificar quantidade de itens
         itens.forEach(e => {
             if(!e[1] || e[1] < 1){
                 temQuantidade = false;
@@ -117,26 +114,31 @@ class CaixaDaLanchonete {
         });
 
         if(!temQuantidade){
-            return this.mensagem = "Quantidade inválida!";
+            this.mensagem = "Quantidade inválida!";
+            return false;
         }
 
-        return true;
+            return true;
 
         } else {
-            return this.mensagem = "Não há itens no carrinho de compra!";
+            this.mensagem = "Não há itens no carrinho de compra!"
+            return false;
         }
 
     }
 
     verificarMetodoDePagamento(metodoDePagamento){
         if(metodoDePagamento === "debito"){
-            return 1;
+            this.taxa = 1;
+            return true;
         }
         if(metodoDePagamento === "dinheiro"){
-            return 0.95;
+            this.taxa = 0.95;
+            return true;
         }
         if(metodoDePagamento === "credito"){
-            return 1.03;
+            this.taxa = 1.03;
+            return true;
         }
 
         return false;
@@ -147,4 +149,4 @@ class CaixaDaLanchonete {
 export { CaixaDaLanchonete };
 
 let cardapio = new CaixaDaLanchonete();
-cardapio.calcularValorDaCompra("credito", ["sanduiche,3.2", "cafe,1", "queijo,6", "chantily, 3"]);
+cardapio.calcularValorDaCompra("debito", ["cafe,2", "chantily,3"]);
