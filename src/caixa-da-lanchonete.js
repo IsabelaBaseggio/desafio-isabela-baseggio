@@ -147,6 +147,3 @@ class CaixaDaLanchonete {
 }
 
 export { CaixaDaLanchonete };
-
-let cardapio = new CaixaDaLanchonete();
-cardapio.calcularValorDaCompra("debito", ["cafe,2", "chantily,3"]);
